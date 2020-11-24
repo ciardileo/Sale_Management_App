@@ -38,6 +38,7 @@ class App:
 
         self.config_icon = PhotoImage(file='imagens/gear_icon.png')
 
+
         # interface gráfica
         
         UI(self.main, self.config_icon, self.con, self.cur)
@@ -45,8 +46,9 @@ class App:
         self.main.mainloop()
 
 
-
 if __name__ == '__main__':
     App()
 
 print('teste')
+
+print('leonardo lopes ciardi')

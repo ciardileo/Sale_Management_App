@@ -11,6 +11,10 @@ from libs.database import *
 class UI:
     def __init__(self, main, icon_config, con, cur):
 
+        # ícones
+
+        self.sale_icon = PhotoImage(file='C:/Users/Léo/PycharmProjects/Gerenciamento De Vendas/libs/imagens/sales_icon.png')
+
         # instâncias
 
         self.main = main
@@ -49,11 +53,11 @@ class UI:
 
         # botão de registrar
 
-        self.register_button = Button(self.sale_frame, text='REGISTRAR', command=self.register, font='Arial 15')
+        self.register_button = Button(self.sale_frame, text='REGISTRAR', command=self.register, font='Arial 15', relief="flat",bg='#0079d3', fg='white')
 
         # botão de resetar
 
-        self.reset_button = Button(self.sale_frame, text='RESETAR', command=self.sale_reset, font='Arial 15')
+        self.reset_button = Button(self.sale_frame, text='RESETAR', command=self.sale_reset, font='Arial 15', relief="flat",bg='#0079d3', fg='white')
 
         # aba products =============================================================================================
 
@@ -61,7 +65,7 @@ class UI:
 
         # criando um frame para a o treeview
 
-        self.tree_frame = Frame(self.products_frame, pady=50)
+        self.tree_frame = Frame(self.products_frame, pady=50, height=730)
 
         # scrollbar do treeview
 
@@ -69,7 +73,7 @@ class UI:
 
         # tabela que mostrará os produtos
 
-        self.table = ttk.Treeview(self.tree_frame, yscrollcommand=self.tree_scroll.set, selectmode='browse')
+        self.table = ttk.Treeview(self.tree_frame, yscrollcommand=self.tree_scroll.set, selectmode='browse', height=730)
         self.tree_scroll.config(command=self.table.yview)
 
         self.table['columns'] = ('ID', 'Nome', 'EAN', 'Preço', 'Quantidade')
@@ -91,25 +95,6 @@ class UI:
         self.table.heading('Preço', text='Preço')
         self.table.heading('Quantidade', text='Quantidade')
 
-        # armazenando os produtos em uma lista
-
-        self.cur.execute('select * from products')
-
-        self.products = self.cur.fetchall()
-
-        self.con.commit()
-
-        # print(self.products)
-
-        # passando os produtos para a tabela
-
-        id = 1
-
-        for self.line in self.products:
-            self.table.insert(parent='', index='end', iid=id,
-                              values=(self.line[0], self.line[1], self.line[2], self.line[3], self.line[4]))
-            id += 1
-
         # aba search=============================================================================
 
         # frame de pesquisa
@@ -126,7 +111,7 @@ class UI:
 
         # radio buttons para o que a pessoa quer pesquisar
 
-        self.lb_radio = Label(text='Pesquisar por:')
+        self.lb_radio = Label(self.search_frame, text='Pesquisar por:')
 
         self.search_p1 = Radiobutton(self.search_frame, text='Nome do Produto', variable=self.search_parameter,
                                      value='name')
@@ -138,11 +123,19 @@ class UI:
 
         # botão pesquisar
 
-        self.bt_search = Button(self.search_frame, text='Pesquisar', command=self.search)
+        self.bt_search = Button(self.search_frame, text='Pesquisar', command=self.search, relief="flat",bg='#0079d3', fg='white')
+
+        # botão resetar
+
+        self.reset_search_button = Button(self.search_frame, text='Resetar', command=self.reset_search_results, relief="flat",bg='#0079d3', fg='white')
+
+        # label que mostrará a quantidade de resultados da pesquisa
+
+        self.results_qtt = Label(self.search_frame)
 
         # frame da tabela que mostrará os resultados da pesquisa
 
-        self.search_tree_frame = Frame(self.search_frame, pady=50)
+        self.search_tree_frame = Frame(self.search_frame, pady=50, height=650)
 
         # scrollbar do treeview
 
@@ -151,7 +144,7 @@ class UI:
         # tabela que mostrará os produtos
 
         self.search_tree = ttk.Treeview(self.search_tree_frame, yscrollcommand=self.tree_scroll.set,
-                                        selectmode='browse')
+                                        selectmode='browse', height=400)
         self.tree_scroll2.config(command=self.table.yview)
 
         self.search_tree['columns'] = ('ID', 'Nome', 'EAN', 'Preço', 'Quantidade')
@@ -190,7 +183,7 @@ class UI:
 
         # abas
 
-        self.tab_sales = Button(self.top_frame, text='SALES', height=5, width=10, borderwidth=0,
+        self.tab_sales = Button(self.top_frame, text='PRODUCTS', height=5, width=10 , borderwidth=0,
                                 command=self.sale_register)
         self.tab_sales.place(x=55, y=0)
 
@@ -228,8 +221,8 @@ class UI:
         # product_name.pack()
         self.lb_qtt.pack()
         self.product_quantity.pack()
-        self.register_button.pack()
-        self.reset_button.pack()
+        self.register_button.pack(pady=10)
+        self.reset_button.pack(pady=10)
 
     # reseta os campos
 
@@ -300,12 +293,34 @@ class UI:
 
         self.clean_screen()
 
+        for record in self.table.get_children():
+            self.table.delete(record)
+
         # empacotamentos
 
         self.products_frame.pack()
         self.tree_frame.pack()
         self.tree_scroll.pack(side=RIGHT, fill=Y)
-        self.table.pack()
+        self.table.pack(fill=Y)
+
+        # armazenando os produtos em uma lista
+
+        self.cur.execute('select * from products')
+
+        self.products = self.cur.fetchall()
+
+        self.con.commit()
+
+        # print(self.products)
+
+        # passando os produtos para a tabela
+
+        id = 1
+
+        for self.line in self.products:
+            self.table.insert(parent='', index='end', iid=id,
+                              values=(self.line[0], self.line[1], self.line[2], self.line[3], self.line[4]))
+            id += 1
 
     # aba search =====================================================================================================
 
@@ -329,11 +344,15 @@ class UI:
         self.search_p4.pack()
         self.search_p5.pack()
 
-        self.bt_search.pack()
+        self.bt_search.pack(pady=10)
+
+        self.reset_search_button.pack(pady=10)
+
+        self.results_qtt.pack()
 
         self.search_tree_frame.pack()
 
-        self.tree_scroll2.pack(side=RIGHT)
+        self.tree_scroll2.pack(side=RIGHT, )
 
         self.search_tree.pack()
 
@@ -368,15 +387,22 @@ class UI:
 
         print(self.search_results)
 
+        self.reset_search_results()
+
+        count = 0
         for line in self.search_results:
+            count+=1
             self.search_tree.insert(parent='', index='end',
                               values=(line[0], line[1], line[2], line[3], line[4]))
+
+        self.results_qtt['text'] = f'{str(count)} resultado(s) encontrado(s):'
 
 
     # função que reseta a tabela
 
     def reset_search_results(self):
-        pass
+        for record in self.search_tree.get_children():
+            self.search_tree.delete(record)
 
     # função que limpa a tela
 
