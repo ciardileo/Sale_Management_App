@@ -166,6 +166,20 @@ class UI:
         self.search_tree.heading('Preço', text='Preço')
         self.search_tree.heading('Quantidade', text='Quantidade')
 
+        # aba options =================================================
+
+        self.config_frame = Frame(self.main)
+
+        self.title_lb = Label(self.config_frame, text='Configurações')
+
+        self.language_lb = Label(self.config_frame, text='Linguagem')
+
+        self.lang = StringVar()
+
+        self.english = Radiobutton(self.config_frame, text='Inglês', variable=self.lang, value='english')
+        self.portuguese = Radiobutton(self.config_frame, text='Português', variable=self.lang, value='portuguese')
+
+
         # executando os métodos
 
         self.header()
@@ -178,7 +192,7 @@ class UI:
 
         # config button
 
-        self.bt_config = Button(self.top_frame, image=self.icon_config, borderwidth=0, bg='#D9D9D9')
+        self.bt_config = Button(self.top_frame, image=self.icon_config, borderwidth=0, bg='#D9D9D9', command=self.config_tab)
         self.bt_config.place(x=1010, y=17)
 
         # abas
@@ -403,6 +417,17 @@ class UI:
     def reset_search_results(self):
         for record in self.search_tree.get_children():
             self.search_tree.delete(record)
+
+    def config_tab(self):
+
+        self.config_frame.pack()
+
+        self.title_lb.pack()
+
+        self.language_lb.pack()
+
+        self.english.pack()
+        self.portuguese.pack(side=LEFT)
 
     # função que limpa a tela
 
