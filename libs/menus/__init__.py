@@ -19,7 +19,6 @@ class UI:
 
         self.main = main
         self.icon_config = icon_config
-        self.icon_config = icon_config
         self.con = con
         self.cur = cur
 
@@ -35,13 +34,13 @@ class UI:
 
         # código EAN do produto
 
-        self.lb_cod = Label(self.sale_frame, text='Código EAN do Produto', font='Arial 15')
+        self.lb_cod = Label(self.sale_frame, text='Código EAN do Produto:', font='Arial 15')
 
         self.ean_cod = Entry(self.sale_frame, font='Arial 15')
 
         # nome do produto
 
-        self.lb_name = Label(self.sale_frame, text='Nome do Produto', font='Arial 15')
+        self.lb_name = Label(self.sale_frame, text='Nome do Produto:', font='Arial 15')
 
         self.product_name = Entry(self.sale_frame, font='Arial 15')
 
@@ -172,13 +171,15 @@ class UI:
 
         self.title_lb = Label(self.config_frame, text='Configurações')
 
-        self.language_lb = Label(self.config_frame, text='Linguagem')
+        self.lb_register_way = Label(self.config_frame, text='Registrar prodruto por:')
 
-        self.lang = StringVar()
+        self.register_way = StringVar()
 
-        self.english = Radiobutton(self.config_frame, text='Inglês', variable=self.lang, value='english')
-        self.portuguese = Radiobutton(self.config_frame, text='Português', variable=self.lang, value='portuguese')
+        self.EAN_way = Radiobutton(self.config_frame, text='Código EAN', variable=self.register_way, value='EAN')
+        self.name_way = Radiobutton(self.config_frame, text='Nome do produto', variable=self.register_way, value='name')
 
+        self.EAN_way.select()
+        self.register_way.set('EAN')
 
         # executando os métodos
 
@@ -229,10 +230,18 @@ class UI:
         # empacotamentos
 
         self.sale_frame.pack()
-        self.lb_cod.pack()
-        self.ean_cod.pack()
-        # lb_name.pack()
-        # product_name.pack()
+
+        if self.register_way.get() == 'EAN':
+            self.lb_name.pack_forget()
+            self.product_name.pack_forget()
+            self.lb_cod.pack()
+            self.ean_cod.pack()
+        else:
+            self.lb_cod.pack_forget()
+            self.ean_cod.pack_forget()
+            self.lb_name.pack()
+            self.product_name.pack()
+
         self.lb_qtt.pack()
         self.product_quantity.pack()
         self.register_button.pack(pady=10)
@@ -253,39 +262,46 @@ class UI:
 
         self.ean_cod1 = self.ean_cod.get()
 
-        self.product_name1 = self.product_name.get()
+        self.product_name2 = self.product_name.get()
 
-        self.product_quantity1 = self.product_quantity.get()
+        self.product_quantity2 = self.product_quantity.get()
+
+        if self.register_way.get() == 'EAN':
+            self.value = self.ean_cod1
+            self.command = 'select quantity from products where EAN = ?'
+            self.command2 = 'update products set quantity = ? where EAN = ?'
+        else:
+            self.value = self.product_name2
+            self.command = 'select quantity from products where name = ?'
+            self.command2 = 'update products set quantity = ? where name = ?'
 
         # pegando a quantidade do produto vendida no banco de dados
 
-        self.command = 'select quantity from products where EAN = ?'
 
-        self.cur.execute(self.command, (self.ean_cod1,))
+        self.cur.execute(self.command, (self.value,))
 
         self.actual_value = self.cur.fetchall()
 
         self.final_value = self.actual_value[0]
 
-        self.product_quantity1 += self.final_value[0]
+        self.product_quantity2 += self.final_value[0]
 
         # regisrtrando a venda no banco de dados
 
         try:
 
-            if self.ean_cod1.isnumeric() == False:
-                pass
+            print(self.product_quantity2)
+            #if self.ean_cod1.isnumeric() == False:
+            #    pass
 
-            if len(self.ean_cod1) < 13:
-                pass
+            #if len(self.ean_cod1) < 13:
+             #   pass
 
             # inserindo dados na tabela
 
-            self.command = 'update products set quantity = ? where EAN = ?'
+            self.insts = (self.product_quantity2, self.value)
 
-            self.insts = (self.product_quantity1, self.ean_cod1)
-
-            self.cur.execute(self.command, self.insts)
+            self.cur.execute(self.command2, self.insts)
 
             self.con.commit()
 
@@ -376,8 +392,11 @@ class UI:
 
         self.parameter = self.search_parameter.get()
 
+        self.parameter2 = f'{self.search_bar.get()}%'
+
         if self.parameter == 'id':
             self.command2 = 'select * from products where id like ?'
+            self.parameter2 = f'{self.search_bar.get()}'
 
         if self.parameter == 'EAN':
             self.command2 = 'select * from products where EAN like ?'
@@ -390,8 +409,8 @@ class UI:
 
         if self.parameter == 'quantity':
             self.command2 = 'select * from products where quantity like ?'
+            self.parameter2 = f'{self.search_bar.get()}'
 
-        self.parameter2 = self.search_bar.get()
 
         self.cur.execute(self.command2, (self.parameter2,))
 
@@ -417,17 +436,21 @@ class UI:
     def reset_search_results(self):
         for record in self.search_tree.get_children():
             self.search_tree.delete(record)
+            self.results_qtt['text'] = '0 resultado(s) encontrado(s):'
+
 
     def config_tab(self):
+
+        self.clean_screen()
 
         self.config_frame.pack()
 
         self.title_lb.pack()
 
-        self.language_lb.pack()
+        self.lb_register_way.pack()
 
-        self.english.pack()
-        self.portuguese.pack(side=LEFT)
+        self.EAN_way.pack()
+        self.name_way.pack()
 
     # função que limpa a tela
 
@@ -444,3 +467,7 @@ class UI:
         # limpando a aba search
 
         self.search_frame.pack_forget()
+
+        # limpando a aba configurações
+
+        self.config_frame.pack_forget()
