@@ -5,7 +5,7 @@ import sqlite3 as sql
 from csv import *
 # função que remodela o banco novamente caso precisar
 
-def db_model(cur, con):
+def db_products_model(cur, con):
 
     model = 'create table products(' \
             '   id integer primary key autoincrement not null,' \
@@ -15,6 +15,21 @@ def db_model(cur, con):
             '   quantity int(6)' \
             ');'
 
+
+    cur.execute(model)
+
+    con.commit()
+
+    con.close()
+
+def db_clients_model(cur, con):
+
+    model = 'create table clients(' \
+            '   id integer primary key autoincrement not null,' \
+            '   name varchar(80) not null,' \
+            '   email varchar(30) not null,' \
+            '   phone char(14)'\
+            ');'
 
     cur.execute(model)
 

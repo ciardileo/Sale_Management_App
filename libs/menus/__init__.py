@@ -142,9 +142,9 @@ class UI:
 
         # tabela que mostrará os produtos
 
-        self.search_tree = ttk.Treeview(self.search_tree_frame, yscrollcommand=self.tree_scroll.set,
+        self.search_tree = ttk.Treeview(self.search_tree_frame, yscrollcommand=self.tree_scroll2.set,
                                         selectmode='browse', height=400)
-        self.tree_scroll2.config(command=self.table.yview)
+        self.tree_scroll2.config(command=self.search_tree.yview)
 
         self.search_tree['columns'] = ('ID', 'Nome', 'EAN', 'Preço', 'Quantidade')
 
@@ -181,7 +181,56 @@ class UI:
         self.EAN_way.select()
         self.register_way.set('EAN')
 
+        # aba clients ===================================================
+
+        self.clients_frame = Frame(self.main)
+
+        self.add_lb = Label(self.clients_frame, text='Cadastrar cliente')
+
+        self.client_name_lb = Label(self.clients_frame, text='Nome:')
+        self.client_name_entry = Entry(self.clients_frame)
+
+        self.client_email_lb = Label(self.clients_frame, text='Email:')
+        self.client_email_entry = Entry(self.clients_frame)
+
+        self.client_phone_lb = Label(self.clients_frame, text='Número:')
+        self.client_phone_entry = Entry(self.clients_frame)
+
+        self.register_client_button = Button(self.clients_frame, text='Adicionar Cliente')
+
+        self.reset_client_button = Button(self.clients_frame, text='Resetar')
+
+        self.clients_tree_frame = Frame(self.clients_frame, pady=20)
+
+        # scrollbar
+
+        self.tree_scroll3 = Scrollbar(self.clients_tree_frame)
+
+        # tabela que mostrará os clientes
+
+        self.clients_tree = ttk.Treeview(self.clients_tree_frame, yscrollcommand=self.tree_scroll3.set, selectmode='browse', height=200)
+        self.tree_scroll3.config(command=self.clients_tree.yview)
+
+        self.clients_tree['columns'] = ('ID', 'Nome', 'Email', 'Telefone')
+
+        # formatando as colunas
+
+        self.clients_tree.column('#0', width=0, stretch=NO)
+        self.clients_tree.column('ID', anchor=CENTER, width=60, minwidth=15)
+        self.clients_tree.column('Nome', anchor=W, width=400)
+        self.clients_tree.column('Email', width=200)
+        self.clients_tree.column("Telefone", anchor=W, width=200)
+
+        # cabeçalho da tabela
+
+        self.clients_tree.heading('ID', text='ID')
+        self.clients_tree.heading('Nome', text='Nome')
+        self.clients_tree.heading('Email', text='Email')
+        self.clients_tree.heading('Telefone', text='Telefone')
+
         # executando os métodos
+
+        # db_clients_model(self.cur, self.con)
 
         self.header()
 
@@ -202,7 +251,7 @@ class UI:
                                 command=self.sale_register)
         self.tab_sales.place(x=55, y=0)
 
-        self.tab_clients = Button(self.top_frame, text='CLIENTS', height=5, width=10, borderwidth=0)
+        self.tab_clients = Button(self.top_frame, text='CLIENTS', height=5, width=10, borderwidth=0, command=self.clients_tab)
         self.tab_clients.place(x=190, y=0)
 
         self.tab_products = Button(self.top_frame, text='PRODUCTS', height=5, width=10, borderwidth=0,
@@ -382,7 +431,7 @@ class UI:
 
         self.search_tree_frame.pack()
 
-        self.tree_scroll2.pack(side=RIGHT, )
+        self.tree_scroll2.pack(side=RIGHT, fill=Y)
 
         self.search_tree.pack()
 
@@ -452,6 +501,24 @@ class UI:
         self.EAN_way.pack()
         self.name_way.pack()
 
+    def clients_tab(self):
+
+        self.clean_screen()
+
+        self.clients_frame.pack()
+        self.add_lb.pack()
+        self.client_name_lb.pack()
+        self.client_name_entry.pack()
+        self.client_email_lb.pack()
+        self.client_email_entry.pack()
+        self.client_phone_lb.pack()
+        self.client_phone_entry.pack()
+        self.register_client_button.pack(padx=10, pady=10)
+        self.reset_client_button.pack()
+        self.clients_tree_frame.pack()
+        self.tree_scroll3.pack(side=RIGHT, fill=Y)
+        self.clients_tree.pack()
+
     # função que limpa a tela
 
     def clean_screen(self):
@@ -471,3 +538,7 @@ class UI:
         # limpando a aba configurações
 
         self.config_frame.pack_forget()
+
+        # limpando a aba clients
+
+        self.clients_frame.pack_forget()
