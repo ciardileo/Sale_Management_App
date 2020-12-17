@@ -13,7 +13,11 @@ class UI:
 
         # ícones
 
-        self.sale_icon = PhotoImage(file='C:/Users/Léo/PycharmProjects/Gerenciamento De Vendas/libs/imagens/sales_icon.png')
+        self.sale_icon = PhotoImage(
+            file='C:/Users/Léo/PycharmProjects/Gerenciamento De Vendas/libs/imagens/sales_icon.png')
+
+        self.refresh_icon = PhotoImage(
+            file='C:/Users/Léo/PycharmProjects/Gerenciamento De Vendas/libs/imagens/refresh-icon.png')
 
         # instâncias
 
@@ -52,11 +56,13 @@ class UI:
 
         # botão de registrar
 
-        self.register_button = Button(self.sale_frame, text='REGISTRAR', command=self.register, font='Arial 15', relief="flat",bg='#0079d3', fg='white')
+        self.register_button = Button(self.sale_frame, text='REGISTRAR', command=self.register, font='Arial 15',
+                                      relief="flat", bg='#0079d3', fg='white')
 
         # botão de resetar
 
-        self.reset_button = Button(self.sale_frame, text='RESETAR', command=self.sale_reset, font='Arial 15', relief="flat",bg='#0079d3', fg='white')
+        self.reset_button = Button(self.sale_frame, text='RESETAR', command=self.sale_reset, font='Arial 15',
+                                   relief="flat", bg='#0079d3', fg='white')
 
         # aba products =============================================================================================
 
@@ -122,11 +128,13 @@ class UI:
 
         # botão pesquisar
 
-        self.bt_search = Button(self.search_frame, text='Pesquisar', command=self.search, relief="flat",bg='#0079d3', fg='white')
+        self.bt_search = Button(self.search_frame, text='Pesquisar', command=self.search, relief="flat", bg='#0079d3',
+                                fg='white')
 
         # botão resetar
 
-        self.reset_search_button = Button(self.search_frame, text='Resetar', command=self.reset_search_results, relief="flat",bg='#0079d3', fg='white')
+        self.reset_search_button = Button(self.search_frame, text='Resetar', command=self.reset_search_results,
+                                          relief="flat", bg='#0079d3', fg='white')
 
         # label que mostrará a quantidade de resultados da pesquisa
 
@@ -196,9 +204,11 @@ class UI:
         self.client_phone_lb = Label(self.clients_frame, text='Número:')
         self.client_phone_entry = Entry(self.clients_frame)
 
-        self.register_client_button = Button(self.clients_frame, text='Adicionar Cliente')
+        self.register_client_button = Button(self.clients_frame, text='Adicionar Cliente', command=self.register_client)
 
-        self.reset_client_button = Button(self.clients_frame, text='Resetar')
+        self.reset_client_button = Button(self.clients_frame, text='Resetar', command=self.reset_clients_data)
+
+        self.refresh_clients_button = Button(self.clients_frame, image=self.refresh_icon, command=self.refresh_clients)
 
         self.clients_tree_frame = Frame(self.clients_frame, pady=20)
 
@@ -208,7 +218,8 @@ class UI:
 
         # tabela que mostrará os clientes
 
-        self.clients_tree = ttk.Treeview(self.clients_tree_frame, yscrollcommand=self.tree_scroll3.set, selectmode='browse', height=200)
+        self.clients_tree = ttk.Treeview(self.clients_tree_frame, yscrollcommand=self.tree_scroll3.set,
+                                         selectmode='browse', height=200)
         self.tree_scroll3.config(command=self.clients_tree.yview)
 
         self.clients_tree['columns'] = ('ID', 'Nome', 'Email', 'Telefone')
@@ -217,9 +228,9 @@ class UI:
 
         self.clients_tree.column('#0', width=0, stretch=NO)
         self.clients_tree.column('ID', anchor=CENTER, width=60, minwidth=15)
-        self.clients_tree.column('Nome', anchor=W, width=400)
-        self.clients_tree.column('Email', width=200)
-        self.clients_tree.column("Telefone", anchor=W, width=200)
+        self.clients_tree.column('Nome', anchor=W, width=250)
+        self.clients_tree.column('Email', width=250)
+        self.clients_tree.column("Telefone", anchor=W, width=250)
 
         # cabeçalho da tabela
 
@@ -242,16 +253,18 @@ class UI:
 
         # config button
 
-        self.bt_config = Button(self.top_frame, image=self.icon_config, borderwidth=0, bg='#D9D9D9', command=self.config_tab)
+        self.bt_config = Button(self.top_frame, image=self.icon_config, borderwidth=0, bg='#D9D9D9',
+                                command=self.config_tab)
         self.bt_config.place(x=1010, y=17)
 
         # abas
 
-        self.tab_sales = Button(self.top_frame, text='PRODUCTS', height=5, width=10 , borderwidth=0,
+        self.tab_sales = Button(self.top_frame, text='PRODUCTS', height=5, width=10, borderwidth=0,
                                 command=self.sale_register)
         self.tab_sales.place(x=55, y=0)
 
-        self.tab_clients = Button(self.top_frame, text='CLIENTS', height=5, width=10, borderwidth=0, command=self.clients_tab)
+        self.tab_clients = Button(self.top_frame, text='CLIENTS', height=5, width=10, borderwidth=0,
+                                  command=self.clients_tab)
         self.tab_clients.place(x=190, y=0)
 
         self.tab_products = Button(self.top_frame, text='PRODUCTS', height=5, width=10, borderwidth=0,
@@ -326,7 +339,6 @@ class UI:
 
         # pegando a quantidade do produto vendida no banco de dados
 
-
         self.cur.execute(self.command, (self.value,))
 
         self.actual_value = self.cur.fetchall()
@@ -340,11 +352,11 @@ class UI:
         try:
 
             print(self.product_quantity2)
-            #if self.ean_cod1.isnumeric() == False:
+            # if self.ean_cod1.isnumeric() == False:
             #    pass
 
-            #if len(self.ean_cod1) < 13:
-             #   pass
+            # if len(self.ean_cod1) < 13:
+            #   pass
 
             # inserindo dados na tabela
 
@@ -460,7 +472,6 @@ class UI:
             self.command2 = 'select * from products where quantity like ?'
             self.parameter2 = f'{self.search_bar.get()}'
 
-
         self.cur.execute(self.command2, (self.parameter2,))
 
         self.search_results = self.cur.fetchall()
@@ -473,12 +484,11 @@ class UI:
 
         count = 0
         for line in self.search_results:
-            count+=1
+            count += 1
             self.search_tree.insert(parent='', index='end',
-                              values=(line[0], line[1], line[2], line[3], line[4]))
+                                    values=(line[0], line[1], line[2], line[3], line[4]))
 
         self.results_qtt['text'] = f'{str(count)} resultado(s) encontrado(s):'
-
 
     # função que reseta a tabela
 
@@ -486,7 +496,6 @@ class UI:
         for record in self.search_tree.get_children():
             self.search_tree.delete(record)
             self.results_qtt['text'] = '0 resultado(s) encontrado(s):'
-
 
     def config_tab(self):
 
@@ -518,6 +527,54 @@ class UI:
         self.clients_tree_frame.pack()
         self.tree_scroll3.pack(side=RIGHT, fill=Y)
         self.clients_tree.pack()
+        self.refresh_clients_button.place(x=750, y=180)
+
+        self.refresh_clients()
+
+    def reset_clients_data(self):
+        self.client_name_entry.delete(0, END)
+        self.client_email_entry.delete(0, END)
+        self.client_phone_entry.delete(0, END)
+
+    def register_client(self):
+        try:
+
+            self.new_client_name = str(self.client_name_entry.get())
+            self.new_client_email = str(self.client_email_entry.get())
+            self.new_client_phone = str(self.client_phone_entry.get())
+
+            command = 'insert into clients (name, email, phone) values (?, ?, ?)'
+
+            self.cur.execute(command, (self.new_client_name, self.new_client_email, self.new_client_phone))
+
+            self.con.commit()
+
+            messagebox.showinfo('IMPORTANTE!', message='NOVO CLIENTE REGISTRADO')
+
+            self.reset_clients_data()
+
+        except:
+            messagebox.showinfo('IMPORTANTE!', message='UM ERRO OCORREU!')
+
+    def refresh_clients(self):
+
+        for record in self.clients_tree.get_children():
+            self.clients_tree.delete(record)
+
+        command = 'select * from clients'
+
+        self.cur.execute(command)
+
+        clients_db = self.cur.fetchall()
+
+        self.con.commit()
+
+        id = 1
+
+        for client in clients_db:
+            self.clients_tree.insert(parent='', index='end', iid=id,
+                                     values=(client[0], client[1], client[2], client[3]))
+            id += 1
 
     # função que limpa a tela
 
