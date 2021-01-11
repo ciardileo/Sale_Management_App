@@ -19,6 +19,9 @@ class UI:
         self.refresh_icon = PhotoImage(
             file='C:/Users/Léo/PycharmProjects/Gerenciamento De Vendas/libs/imagens/refresh-icon.png')
 
+        # fontes
+
+        self.font1 = 'Helveltica 14'
         # instâncias
 
         self.main = main
@@ -239,6 +242,37 @@ class UI:
         self.clients_tree.heading('Email', text='Email')
         self.clients_tree.heading('Telefone', text='Telefone')
 
+        # aba reports ==============================================================
+
+        # frame da aba
+
+        self.report_frame = Frame(self.main)
+
+        # label da comissão
+
+        self.comission_lb = Label(self.report_frame, text='Porcentagem de comissão:', font=self.font1)
+
+
+        # entry da comissão
+
+        self.comission_entry = Entry(self.report_frame)
+
+        # botão de calcular comissão
+
+        self.comission_button = Button(self.report_frame, text='Calcular')
+
+        # meta do vendedor
+
+        self.goal_lb = Label(self.report_frame, text='Meta:')
+
+        self.goal_entry = Entry(self.report_frame)
+
+        self.goal_button = Button(self.report_frame, text='Calcular')
+
+        # gerar planilha
+
+        self.spreadsheet_bt = Button(self.report_frame, text='Gerar Planilha De Vendas')
+
         # executando os métodos
 
         # db_clients_model(self.cur, self.con)
@@ -271,8 +305,8 @@ class UI:
                                    command=self.products_tab)
         self.tab_products.place(x=325, y=0)
 
-        self.tab_products = Button(self.top_frame, text='REPORTS', height=5, width=10, borderwidth=0)
-        self.tab_products.place(x=450, y=0)
+        self.tab_reports = Button(self.top_frame, text='REPORTS', height=5, width=10, borderwidth=0, command=self.reports_tab)
+        self.tab_reports.place(x=450, y=0)
 
         self.tab_statistics = Button(self.top_frame, text='STATISTICS', height=5, width=10, borderwidth=0)
         self.tab_statistics.place(x=575, y=0)
@@ -576,6 +610,32 @@ class UI:
                                      values=(client[0], client[1], client[2], client[3]))
             id += 1
 
+    # aba reports
+
+    def reports_tab(self):
+
+        # limpa a tela
+
+        self.clean_screen()
+
+        # empacotamentos
+
+        self.report_frame.pack()
+
+        self.comission_lb.pack()
+
+        self.comission_entry.pack()
+
+        self.comission_button.pack()
+
+        self.goal_lb.pack()
+
+        self.goal_entry.pack()
+
+        self.goal_button.pack()
+
+        self.spreadsheet_bt.pack()
+
     # função que limpa a tela
 
     def clean_screen(self):
@@ -599,3 +659,7 @@ class UI:
         # limpando a aba clients
 
         self.clients_frame.pack_forget()
+
+        # limpando a aba reports
+
+        self.report_frame.pack_forget()
