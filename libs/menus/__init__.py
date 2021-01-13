@@ -2,6 +2,9 @@
 
 from tkinter import messagebox
 from tkinter import ttk
+import csv
+from tkinter.filedialog import *
+import os
 
 from libs.database import *
 
@@ -19,9 +22,20 @@ class UI:
         self.refresh_icon = PhotoImage(
             file='C:/Users/Léo/PycharmProjects/Gerenciamento De Vendas/libs/imagens/refresh-icon.png')
 
+        # caminho atual
+
+        self.app_path = os.path.dirname(os.path.realpath(__file__))
+
         # fontes
 
-        self.font1 = 'Helveltica 14'
+        self.font1 = 'Helveltica 18'
+        self.font2 = 'Helveltica 14'
+        self.font3 = 'Helveltica 12'
+
+        # cores
+
+        self.blue = "#0079d3"
+
         # instâncias
 
         self.main = main
@@ -41,35 +55,41 @@ class UI:
 
         # código EAN do produto
 
-        self.lb_cod = Label(self.sale_frame, text='Código EAN do Produto:', font='Arial 15')
+        self.lb_cod = Label(self.sale_frame, text='Código EAN do Produto:', font=self.font1)
 
-        self.ean_cod = Entry(self.sale_frame, font='Arial 15')
+        self.ean_cod = Entry(self.sale_frame, font=self.font1)
 
         # nome do produto
 
-        self.lb_name = Label(self.sale_frame, text='Nome do Produto:', font='Arial 15')
+        self.lb_name = Label(self.sale_frame, text='Nome do Produto:', font=self.font1)
 
-        self.product_name = Entry(self.sale_frame, font='Arial 15')
+        self.product_name = Entry(self.sale_frame, font=self.font1)
 
         # quantidade do produto
 
-        self.lb_qtt = Label(self.sale_frame, text='Quantidade do Produto', font='Arial 15')
+        self.lb_qtt = Label(self.sale_frame, text='Quantidade do Produto', font=self.font1)
 
-        self.product_quantity = Scale(self.sale_frame, from_=1, to=40, orient=HORIZONTAL, font='Arial 15')
+        self.product_quantity = Scale(self.sale_frame, from_=1, to=40, orient=HORIZONTAL, font=self.font1)
 
         # botão de registrar
 
-        self.register_button = Button(self.sale_frame, text='REGISTRAR', command=self.register, font='Arial 15',
-                                      relief="flat", bg='#0079d3', fg='white')
+        self.register_button = Button(self.sale_frame, text='Registrar', command=self.register, bg=self.blue, relief='flat', fg='white', font=self.font2)
 
         # botão de resetar
 
-        self.reset_button = Button(self.sale_frame, text='RESETAR', command=self.sale_reset, font='Arial 15',
-                                   relief="flat", bg='#0079d3', fg='white')
+        self.reset_button = Button(self.sale_frame, text='Resetar', command=self.sale_reset, bg=self.blue, relief='flat', fg='white', font=self.font2)
 
         # aba products =============================================================================================
 
         self.products_frame = Frame(self.main, height=730, width=1100)
+
+        # botões de gerenciamento do banco de dados
+
+
+
+        self.reset_sales_bt = Button(self.products_frame, text='Resetar Vendas', bg=self.blue, relief='flat', fg='white', font=self.font2)
+
+        self.change_database_bt = Button(self.products_frame, text='Configurar Banco de Dados', bg=self.blue, relief='flat', fg='white', font=self.font2)
 
         # criando um frame para a o treeview
 
@@ -111,7 +131,7 @@ class UI:
 
         # barra de pesquisa
 
-        self.search_bar = Entry(self.search_frame)
+        self.search_bar = Entry(self.search_frame, font=self.font3)
 
         # variável que conterá o que a pessoa quer pesquisar
 
@@ -119,29 +139,27 @@ class UI:
 
         # radio buttons para o que a pessoa quer pesquisar
 
-        self.lb_radio = Label(self.search_frame, text='Pesquisar por:')
+        self.lb_radio = Label(self.search_frame, text='Pesquisar por:', font=self.font3)
 
         self.search_p1 = Radiobutton(self.search_frame, text='Nome do Produto', variable=self.search_parameter,
-                                     value='name')
-        self.search_p2 = Radiobutton(self.search_frame, text='ID', variable=self.search_parameter, value='id')
-        self.search_p3 = Radiobutton(self.search_frame, text='EAN', variable=self.search_parameter, value='EAN')
-        self.search_p4 = Radiobutton(self.search_frame, text='Preço', variable=self.search_parameter, value='value')
+                                     value='name', font=self.font3)
+        self.search_p2 = Radiobutton(self.search_frame, text='ID', variable=self.search_parameter, value='id', font=self.font3)
+        self.search_p3 = Radiobutton(self.search_frame, text='EAN', variable=self.search_parameter, value='EAN', font=self.font3)
+        self.search_p4 = Radiobutton(self.search_frame, text='Preço', variable=self.search_parameter, value='value', font=self.font3)
         self.search_p5 = Radiobutton(self.search_frame, text='Quantidade', variable=self.search_parameter,
-                                     value='quantity')
+                                     value='quantity', font=self.font3)
 
         # botão pesquisar
 
-        self.bt_search = Button(self.search_frame, text='Pesquisar', command=self.search, relief="flat", bg='#0079d3',
-                                fg='white')
+        self.bt_search = Button(self.search_frame, text='Pesquisar', command=self.search, bg=self.blue, relief='flat', fg='white', font=self.font2)
 
         # botão resetar
 
-        self.reset_search_button = Button(self.search_frame, text='Resetar', command=self.reset_search_results,
-                                          relief="flat", bg='#0079d3', fg='white')
+        self.reset_search_button = Button(self.search_frame, text='Resetar', command=self.reset_search_results, bg=self.blue, relief='flat', fg='white', font=self.font2)
 
         # label que mostrará a quantidade de resultados da pesquisa
 
-        self.results_qtt = Label(self.search_frame)
+        self.results_qtt = Label(self.search_frame, font=self.font3)
 
         # frame da tabela que mostrará os resultados da pesquisa
 
@@ -180,14 +198,14 @@ class UI:
 
         self.config_frame = Frame(self.main)
 
-        self.title_lb = Label(self.config_frame, text='Configurações')
+        self.title_lb = Label(self.config_frame, text='Configurações', font=self.font1)
 
-        self.lb_register_way = Label(self.config_frame, text='Registrar prodruto por:')
+        self.lb_register_way = Label(self.config_frame, text='Registrar produto por:', font=self.font2)
 
         self.register_way = StringVar()
 
-        self.EAN_way = Radiobutton(self.config_frame, text='Código EAN', variable=self.register_way, value='EAN')
-        self.name_way = Radiobutton(self.config_frame, text='Nome do produto', variable=self.register_way, value='name')
+        self.EAN_way = Radiobutton(self.config_frame, text='Código EAN', variable=self.register_way, value='EAN', font=self.font3)
+        self.name_way = Radiobutton(self.config_frame, text='Nome do produto', variable=self.register_way, value='name', font=self.font3)
 
         self.EAN_way.select()
         self.register_way.set('EAN')
@@ -196,22 +214,22 @@ class UI:
 
         self.clients_frame = Frame(self.main)
 
-        self.add_lb = Label(self.clients_frame, text='Cadastrar cliente')
+        self.add_lb = Label(self.clients_frame, text='Cadastrar cliente', font=self.font3)
 
-        self.client_name_lb = Label(self.clients_frame, text='Nome:')
-        self.client_name_entry = Entry(self.clients_frame)
+        self.client_name_lb = Label(self.clients_frame, text='Nome:', font=self.font3)
+        self.client_name_entry = Entry(self.clients_frame, font=self.font3)
 
-        self.client_email_lb = Label(self.clients_frame, text='Email:')
-        self.client_email_entry = Entry(self.clients_frame)
+        self.client_email_lb = Label(self.clients_frame, text='Email:', font=self.font3)
+        self.client_email_entry = Entry(self.clients_frame, font=self.font3)
 
-        self.client_phone_lb = Label(self.clients_frame, text='Número:')
-        self.client_phone_entry = Entry(self.clients_frame)
+        self.client_phone_lb = Label(self.clients_frame, text='Número:', font=self.font3)
+        self.client_phone_entry = Entry(self.clients_frame, font=self.font3)
 
-        self.register_client_button = Button(self.clients_frame, text='Adicionar Cliente', command=self.register_client)
+        self.register_client_button = Button(self.clients_frame, text='Adicionar Cliente', command=self.register_client, bg=self.blue, relief='flat', fg='white', font=self.font2)
 
-        self.reset_client_button = Button(self.clients_frame, text='Resetar', command=self.reset_clients_data)
+        self.reset_client_button = Button(self.clients_frame, text='Resetar', command=self.reset_clients_data, bg=self.blue, relief='flat', fg='white', font=self.font2)
 
-        self.refresh_clients_button = Button(self.clients_frame, image=self.refresh_icon, command=self.refresh_clients)
+        self.refresh_clients_button = Button(self.clients_frame, image=self.refresh_icon, command=self.refresh_clients, relief='flat', fg='white', font=self.font2)
 
         self.clients_tree_frame = Frame(self.clients_frame, pady=20)
 
@@ -252,27 +270,40 @@ class UI:
 
         self.comission_lb = Label(self.report_frame, text='Porcentagem de comissão:', font=self.font1)
 
-
         # entry da comissão
 
-        self.comission_entry = Entry(self.report_frame)
+        self.comission_entry = Entry(self.report_frame, font=self.font2)
 
         # botão de calcular comissão
 
-        self.comission_button = Button(self.report_frame, text='Calcular')
+        self.comission_button = Button(self.report_frame, text='Calcular', command=self.comission, bg=self.blue, relief='flat', fg='white', font=self.font2)
+
+        # label de resposta
+
+        self.comission_total = Label(self.report_frame, text='Sua Comissão: R$', font=self.font2, fg='green')
 
         # meta do vendedor
 
-        self.goal_lb = Label(self.report_frame, text='Meta:')
+        self.goal_lb = Label(self.report_frame, text='Meta:', font=self.font1)
 
-        self.goal_entry = Entry(self.report_frame)
+        self.goal_entry = Entry(self.report_frame, font=self.font2)
 
-        self.goal_button = Button(self.report_frame, text='Calcular')
+        self.goal_button = Button(self.report_frame, text='Calcular', command=self.goal, bg=self.blue, relief='flat', fg='white', font=self.font2)
+
+        self.goal_status_lb = Label(self.report_frame, font=self.font2)
 
         # gerar planilha
 
-        self.spreadsheet_bt = Button(self.report_frame, text='Gerar Planilha De Vendas')
+        self.spreadsheet_bt = Button(self.report_frame, text='Gerar Planilha De Vendas', command=self.generate_spreadsheet, bg=self.blue, relief='flat', fg='white', font=self.font2)
 
+        # aba estatísticas ================================================================================
+
+        self.statistics_frame = Frame(self.main)
+
+        self.wip_label = Label(self.statistics_frame, text='Está aba ainda não está pronta! Volte mais tarde.', font='Helveltica 30 bold')
+
+        self.ico_warning = PhotoImage(file='C:/Users/Léo/PycharmProjects/Gerenciamento De Vendas/libs/imagens/warning_icon.png')
+        self.warning_icon = Label(self.statistics_frame, image=self.ico_warning)
         # executando os métodos
 
         # db_clients_model(self.cur, self.con)
@@ -308,7 +339,7 @@ class UI:
         self.tab_reports = Button(self.top_frame, text='REPORTS', height=5, width=10, borderwidth=0, command=self.reports_tab)
         self.tab_reports.place(x=450, y=0)
 
-        self.tab_statistics = Button(self.top_frame, text='STATISTICS', height=5, width=10, borderwidth=0)
+        self.tab_statistics = Button(self.top_frame, text='STATISTICS', height=5, width=10, borderwidth=0, command=self.statistics_tab)
         self.tab_statistics.place(x=575, y=0)
 
         self.tab_search = Button(self.top_frame, text='SEARCH', height=5, width=10, borderwidth=0,
@@ -418,12 +449,16 @@ class UI:
 
         self.clean_screen()
 
+        self.products_frame.pack(fill=BOTH)
+
+        self.reset_sales_bt.pack(pady=5)
+        self.change_database_bt.pack()
+
         for record in self.table.get_children():
             self.table.delete(record)
 
         # empacotamentos
 
-        self.products_frame.pack()
         self.tree_frame.pack()
         self.tree_scroll.pack(side=RIGHT, fill=Y)
         self.table.pack(fill=Y)
@@ -459,7 +494,7 @@ class UI:
 
         self.search_frame.pack()
 
-        self.search_bar.pack()
+        self.search_bar.pack(pady=8)
 
         self.lb_radio.pack()
 
@@ -535,14 +570,14 @@ class UI:
 
         self.clean_screen()
 
-        self.config_frame.pack()
+        self.config_frame.pack(pady=5)
 
-        self.title_lb.pack()
+        self.title_lb.pack(pady=5)
 
-        self.lb_register_way.pack()
+        self.lb_register_way.pack(pady=5)
 
-        self.EAN_way.pack()
-        self.name_way.pack()
+        self.EAN_way.pack(pady=5)
+        self.name_way.pack(pady=5)
 
     def clients_tab(self):
 
@@ -622,19 +657,133 @@ class UI:
 
         self.report_frame.pack()
 
-        self.comission_lb.pack()
+        self.comission_lb.pack(pady=5)
 
-        self.comission_entry.pack()
+        self.comission_entry.pack(pady=5)
 
-        self.comission_button.pack()
+        self.comission_button.pack(pady=5)
 
-        self.goal_lb.pack()
+        self.comission_total.pack(pady=5)
 
-        self.goal_entry.pack()
+        self.goal_lb.pack(pady=5)
 
-        self.goal_button.pack()
+        self.goal_entry.pack(pady=5)
 
-        self.spreadsheet_bt.pack()
+        self.goal_button.pack(pady=5)
+
+        self.goal_status_lb.pack(pady=5)
+
+        self.spreadsheet_bt.pack(pady=5)
+
+    # função que calcula a comissõa
+
+    def comission(self):
+
+        command = 'select value, quantity from products where quantity >=1'
+
+        self.cur.execute(command)
+
+        values = self.cur.fetchall()
+
+        self.con.commit()
+
+        print(values)
+
+        valor_final = 0
+
+        for value in values:
+            valor_final += float(value[0]) * value[1]
+
+        comission = self.comission_entry.get().replace(',', '.')
+
+
+        print(valor_final)
+
+        valor_final = (float(comission.replace('%', ' ')) / 100) * valor_final
+
+        valor_final = str(round(valor_final, 2)).replace('.', ',')
+
+        self.comission_total['text'] = f'Sua Comissão: R${valor_final}'
+
+    # função que calcula a meta
+
+    def goal(self):
+
+        self.cur.execute('select value, quantity from products where quantity >=1')
+
+        values = self.cur.fetchall()
+
+        self.con.commit()
+
+        meta = self.goal_entry.get().replace(',', '.')
+
+        meta = meta.replace('R$', ' ')
+
+        meta = int(meta)
+
+        valor_final = 0
+
+        for value in values:
+            valor_final += float(value[0]) * value[1]
+
+        #meta = valor_final * 100 / int(meta)
+
+        if valor_final < meta:
+
+            difference = round(meta - valor_final)
+
+            self.goal_status_lb['text'] = f'Ainda faltam R${str(difference).replace(".", ",")} para alcançar sua meta'
+            self.goal_status_lb['fg'] = 'red'
+
+        elif valor_final > meta:
+
+            difference = round(valor_final - meta)
+
+            self.goal_status_lb['text'] = f'Você ultrapassou a meta em R${str(difference).replace(".", ",")}!!!'
+            self.goal_status_lb['fg'] = 'green'
+
+        else:
+
+            self.goal_status_lb['text'] = 'Você bateu a meta!'
+            self.goal_status_lb['fg'] = 'yellow'
+
+
+    # função que gera a planilha
+
+    def generate_spreadsheet(self):
+
+        file = asksaveasfilename(filetypes=(('CSV files', '*.csv'),))
+
+        if file:
+
+            with open(f'{file}.csv', 'a', newline='') as csv_file:
+                csv_writer = csv.writer(csv_file, dialect=excel, delimiter=',')
+
+                csv_writer.writerow(('ID', 'Nome', 'EAN', 'Preco', 'Quantidade'))
+
+                self.cur.execute('select * from products')
+
+                data_base = self.cur.fetchall()
+
+                self.con.commit()
+
+                for product in data_base:
+                    csv_writer.writerow(product)
+
+                csv_file.close()
+
+                messagebox.showinfo('IMPORTANTE!', message='O ARQUIVO FOI SALVO COMO CSV! CONFIGURE O EXCEL PARA VER OS DADOS CORRETAMENTE')
+
+    # função que empacota a aba statistics
+
+    def statistics_tab(self):
+
+        self.clean_screen()
+
+        self.statistics_frame.pack(fill=BOTH)
+
+        self.warning_icon.pack(pady=10)
+        self.wip_label.pack()
 
     # função que limpa a tela
 
@@ -663,3 +812,7 @@ class UI:
         # limpando a aba reports
 
         self.report_frame.pack_forget()
+
+        # limpando a aba statistics
+
+        self.statistics_frame.pack_forget()
