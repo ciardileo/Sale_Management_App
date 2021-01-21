@@ -14,17 +14,19 @@ from libs.database import *
 class UI:
     def __init__(self, main, icon_config, con, cur):
 
-        # ícones
-
-        self.sale_icon = PhotoImage(
-            file='C:/Users/Léo/PycharmProjects/Gerenciamento De Vendas/libs/imagens/sales_icon.png')
-
-        self.refresh_icon = PhotoImage(
-            file='C:/Users/Léo/PycharmProjects/Gerenciamento De Vendas/libs/imagens/refresh-icon.png')
-
         # caminho atual
 
         self.app_path = os.path.dirname(os.path.realpath(__file__))
+
+        print(self.app_path)
+
+        # ícones
+
+        self.sale_icon = PhotoImage(
+            file=os.path.join(self.app_path.replace("menus", ""), 'imagens', 'sales_icon.png'))
+
+        self.refresh_icon = PhotoImage(
+            file=os.path.join(self.app_path.replace("menus", ""), 'imagens', 'refresh-icon.png'))
 
         # fontes
 
@@ -302,7 +304,7 @@ class UI:
 
         self.wip_label = Label(self.statistics_frame, text='Está aba ainda não está pronta! Volte mais tarde.', font='Helveltica 30 bold')
 
-        self.ico_warning = PhotoImage(file='C:/Users/Léo/PycharmProjects/Gerenciamento De Vendas/libs/imagens/warning_icon.png')
+        self.ico_warning = PhotoImage(file=os.path.join(self.app_path.replace("menus", ""), 'imagens', 'warning-icon.png'))
         self.warning_icon = Label(self.statistics_frame, image=self.ico_warning)
         # executando os métodos
 
