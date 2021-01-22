@@ -87,11 +87,13 @@ class UI:
 
         # botões de gerenciamento do banco de dados
 
+        self.reset_sales_bt = Button(self.products_frame, text='Resetar Vendas', bg=self.blue, relief='flat', fg='white', font=self.font2, command=self.reset_sales)
 
+        self.delete_product_bt = Button(self.products_frame, text='Remover Produto', bg=self.blue, relief='flat', fg='white', font=self.font2, command=self.delete_product)
 
-        self.reset_sales_bt = Button(self.products_frame, text='Resetar Vendas', bg=self.blue, relief='flat', fg='white', font=self.font2)
+        self.edit_product_bt = Button(self.products_frame, text='Editar Produto', bg=self.blue, relief='flat', fg='white', font=self.font2, command=self.edit_product)
 
-        self.change_database_bt = Button(self.products_frame, text='Configurar Banco de Dados', bg=self.blue, relief='flat', fg='white', font=self.font2)
+        self.add_product_bt = Button(self.products_frame, text='Adicionar Produto', bg=self.blue, relief='flat', fg='white', font=self.font2, command=self.add_product)
 
         # criando um frame para a o treeview
 
@@ -326,25 +328,25 @@ class UI:
 
         # abas
 
-        self.tab_sales = Button(self.top_frame, text='PRODUCTS', height=5, width=10, borderwidth=0,
+        self.tab_sales = Button(self.top_frame, text='VENDAS', height=5, width=10, borderwidth=0,
                                 command=self.sale_register)
         self.tab_sales.place(x=55, y=0)
 
-        self.tab_clients = Button(self.top_frame, text='CLIENTS', height=5, width=10, borderwidth=0,
+        self.tab_clients = Button(self.top_frame, text='CLIENTES', height=5, width=10, borderwidth=0,
                                   command=self.clients_tab)
         self.tab_clients.place(x=190, y=0)
 
-        self.tab_products = Button(self.top_frame, text='PRODUCTS', height=5, width=10, borderwidth=0,
+        self.tab_products = Button(self.top_frame, text='PRODUTOS', height=5, width=10, borderwidth=0,
                                    command=self.products_tab)
         self.tab_products.place(x=325, y=0)
 
-        self.tab_reports = Button(self.top_frame, text='REPORTS', height=5, width=10, borderwidth=0, command=self.reports_tab)
+        self.tab_reports = Button(self.top_frame, text='RELATÓRIOS', height=5, width=10, borderwidth=0, command=self.reports_tab)
         self.tab_reports.place(x=450, y=0)
 
-        self.tab_statistics = Button(self.top_frame, text='STATISTICS', height=5, width=10, borderwidth=0, command=self.statistics_tab)
+        self.tab_statistics = Button(self.top_frame, text='ESTATÍSTICAS', height=5, width=10, borderwidth=0, command=self.statistics_tab)
         self.tab_statistics.place(x=575, y=0)
 
-        self.tab_search = Button(self.top_frame, text='SEARCH', height=5, width=10, borderwidth=0,
+        self.tab_search = Button(self.top_frame, text='BUSCAR', height=5, width=10, borderwidth=0,
                                  command=self.search_tab)
         self.tab_search.place(x=700, y=0)
 
@@ -483,6 +485,24 @@ class UI:
             self.table.insert(parent='', index='end', iid=id,
                               values=(self.line[0], self.line[1], self.line[2], self.line[3], self.line[4]))
             id += 1
+
+    def reset_sales(self):
+
+        command = 'update products set quantity = 0 where quantity >= 1'
+
+        self.cur.execute(command)
+
+        self.con.commit()
+
+    def edit_product(self):
+        pass
+
+    def delete_product(self):
+        pass
+
+    def add_product(self):
+        pass
+
 
     # aba search =====================================================================================================
 
