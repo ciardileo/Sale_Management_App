@@ -30,9 +30,9 @@ class UI:
 
         # fontes
 
-        self.font1 = 'Helveltica 18'
-        self.font2 = 'Helveltica 14'
-        self.font3 = 'Helveltica 12'
+        self.font1 = 'Helvetica 18'
+        self.font2 = 'Helvetica 14'
+        self.font3 = 'Helvetica 12'
 
         # cores
 
@@ -456,7 +456,9 @@ class UI:
         self.products_frame.pack(fill=BOTH)
 
         self.reset_sales_bt.pack(pady=5)
-        self.change_database_bt.pack()
+        self.delete_product_bt.pack()
+        self.edit_product_bt.pack(pady=5)
+        self.add_product_bt.pack()
 
         for record in self.table.get_children():
             self.table.delete(record)
@@ -494,11 +496,29 @@ class UI:
 
         self.con.commit()
 
+    def selectItem(self):
+        selected = self.table.focus()
+
+
+        return self.table.item(selected)
+
     def edit_product(self):
         pass
 
     def delete_product(self):
-        pass
+
+        product = self.selectItem()
+        product = product['values']
+
+        print(product)
+
+        command = 'delete from products where id = ?'
+
+        id = product[0]
+
+        self.cur.execute(command, (id,))
+
+        #self.con.commit()
 
     def add_product(self):
         pass
