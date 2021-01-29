@@ -503,7 +503,77 @@ class UI:
         return self.table.item(selected)
 
     def edit_product(self):
-        pass
+
+        product = self.selectItem()
+
+        print(product)
+
+        if len(product['values']) <= 1:
+            pass
+        else:
+            product = product['values']
+
+            popup = Toplevel()
+
+            lb_name = Label(popup, text='Nome do Produto:', font=self.font3)
+            entry_name = Entry(popup, font=self.font3)
+            lb_name.grid(row=1, column=1)
+            entry_name.grid(row=1, column=2)
+
+
+            lb_ean = Label(popup, text='Código EAN:', font=self.font3)
+            entry_ean = Entry(popup, font=self.font3)
+            lb_ean.grid(row=2, column=1)
+            entry_ean.grid(row=2, column=2)
+
+            lb_price = Label(popup, text='Preço:', font=self.font3)
+            entry_price = Entry(popup, font=self.font3)
+            lb_price.grid(row=3, column=1)
+            entry_price.grid(row=3, column=2)
+
+            lb_quantity = Label(popup, text='Quantidade Vendida:', font=self.font3)
+            entry_quantity = Entry(popup, font=self.font3)
+            lb_quantity.grid(row=4, column=1)
+            entry_quantity.grid(row=4, column=2)
+
+            entry_name.insert(0, product[1])
+            entry_ean.insert(0, product[2])
+            entry_price.insert(0, str(product[3]).replace('.', ','))
+            entry_quantity.insert(0, product[4])
+
+            def update():
+
+                new_name = str(entry_name.get())
+                new_ean = int(entry_ean.get())
+                new_price = str(entry_price.get()).replace(',', '.')
+                new_quantity = int(entry_quantity.get())
+
+                command = 'update products set name = ?, EAN = ?, value = ?, quantity = ? where id = ?'
+
+                self.cur.execute(command, (new_name, new_ean, new_price, new_quantity, product[0]))
+
+                self.con.commit()
+
+                popup.destroy()
+
+            def reset():
+                entry_name.delete(0, END)
+                entry_ean.delete(0, END)
+                entry_price.delete(0, END)
+                entry_quantity.delete(0, END)
+
+            update_bt = Button(popup, text='Atualizar', fg='white', bg=self.blue, font=self.font3, command=update)
+            reset_bt = Button(popup, text='Resetar Campos', fg='white', bg=self.blue, font=self.font3, command=reset)
+            cancel_bt = Button(popup, text='Cancelar', fg='white', bg=self.blue, font=self.font3, command=popup.destroy)
+
+            update_bt.grid(row=5, column=1, pady=5, padx=5)
+            reset_bt.grid(row=5, column=2, pady=5, padx=5)
+            cancel_bt.grid(row=5, column=3, pady=5, padx=5)
+
+            popup.mainloop()
+
+
+
 
     def delete_product(self):
 
