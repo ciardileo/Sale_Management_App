@@ -573,8 +573,6 @@ class UI:
             popup.mainloop()
 
 
-
-
     def delete_product(self):
 
         product = self.selectItem()
@@ -591,7 +589,60 @@ class UI:
         #self.con.commit()
 
     def add_product(self):
-        pass
+
+        popup = Toplevel()
+
+        lb_name = Label(popup, text='Nome do Produto:', font=self.font3)
+        entry_name = Entry(popup, font=self.font3)
+        lb_name.grid(row=1, column=1)
+        entry_name.grid(row=1, column=2)
+
+        lb_ean = Label(popup, text='Código EAN:', font=self.font3)
+        entry_ean = Entry(popup, font=self.font3)
+        lb_ean.grid(row=2, column=1)
+        entry_ean.grid(row=2, column=2)
+
+        lb_price = Label(popup, text='Preço:', font=self.font3)
+        entry_price = Entry(popup, font=self.font3)
+        lb_price.grid(row=3, column=1)
+        entry_price.grid(row=3, column=2)
+
+        lb_quantity = Label(popup, text='Quantidade Vendida:', font=self.font3)
+        entry_quantity = Entry(popup, font=self.font3)
+        lb_quantity.grid(row=4, column=1)
+        entry_quantity.grid(row=4, column=2)
+
+        entry_quantity.insert(0, '0')
+
+        def add():
+            name = str(entry_name.get())
+            ean = int(entry_ean.get())
+            price = str(entry_price.get()).replace(',', '.')
+            quantity = int(entry_quantity.get())
+
+            command = 'insert into products (name, EAN, value, quantity) values (?, ?, ?, ?)'
+
+            self.cur.execute(command, (name, ean, price, quantity))
+
+            self.con.commit()
+
+            popup.destroy()
+
+        def reset():
+            entry_name.delete(0, END)
+            entry_ean.delete(0, END)
+            entry_price.delete(0, END)
+            entry_quantity.delete(0, END)
+
+        update_bt = Button(popup, text='Adicionar', fg='white', bg=self.blue, font=self.font3, command=add)
+        reset_bt = Button(popup, text='Resetar Campos', fg='white', bg=self.blue, font=self.font3, command=reset)
+        cancel_bt = Button(popup, text='Cancelar', fg='white', bg=self.blue, font=self.font3, command=popup.destroy)
+
+        update_bt.grid(row=5, column=1, pady=5, padx=5)
+        reset_bt.grid(row=5, column=2, pady=5, padx=5)
+        cancel_bt.grid(row=5, column=3, pady=5, padx=5)
+
+        popup.mainloop()
 
 
     # aba search =====================================================================================================
