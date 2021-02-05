@@ -308,6 +308,11 @@ class UI:
 
         self.ico_warning = PhotoImage(file=os.path.join(self.app_path.replace("menus", ""), 'imagens', 'warning-icon.png'))
         self.warning_icon = Label(self.statistics_frame, image=self.ico_warning)
+
+        self.most_sold_products = Label(self.main, text='Produto(s) mais vendido(s):', font=self.font1)
+        self.most_expensive_product = Label(self.main, text='Produto(s) mais caro(s)', font=self.font1)
+        self.most_cheap_product = Label(self.main, text='Produto(s) mais barato(s)', font=self.font1)
+
         # executando os métodos
 
         # db_clients_model(self.cur, self.con)
