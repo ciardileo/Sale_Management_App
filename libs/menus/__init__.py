@@ -5,7 +5,6 @@ from tkinter import ttk
 import csv
 from tkinter.filedialog import *
 import os
-
 from libs.database import *
 
 
@@ -304,14 +303,51 @@ class UI:
 
         self.statistics_frame = Frame(self.main)
 
-        self.wip_label = Label(self.statistics_frame, text='Está aba ainda não está pronta! Volte mais tarde.', font='Helveltica 30 bold')
+        # self.wip_label = Label(self.statistics_frame, text='Está aba ainda não está pronta! Volte mais tarde.', font='Helveltica 30 bold')
+        #
+        # self.ico_warning = PhotoImage(file=os.path.join(self.app_path.replace("menus", ""), 'imagens', 'warning-icon.png'))
+        # self.warning_icon = Label(self.statistics_frame, image=self.ico_warning)
 
-        self.ico_warning = PhotoImage(file=os.path.join(self.app_path.replace("menus", ""), 'imagens', 'warning-icon.png'))
-        self.warning_icon = Label(self.statistics_frame, image=self.ico_warning)
+        self.most_sold_products = Button(self.statistics_frame, text='Mais vendidos', font=self.font2, command=self.most_sold)
+        self.most_expensive_product = Button(self.statistics_frame, text='Mais caros', font=self.font2, command=self.most_expensive)
+        self.most_cheap_product = Button(self.statistics_frame, text='Mais baratos', font=self.font2, command=self.most_cheap)
 
-        self.most_sold_products = Label(self.main, text='Produto(s) mais vendido(s):', font=self.font1)
-        self.most_expensive_product = Label(self.main, text='Produto(s) mais caro(s)', font=self.font1)
-        self.most_cheap_product = Label(self.main, text='Produto(s) mais barato(s)', font=self.font1)
+        # table frame
+
+        self.statistics_table_frame = Frame(self.statistics_frame)
+
+        # scrollbar
+
+        self.statistics_table_scroll = Scrollbar(self.statistics_table_frame)
+
+        self.statistics_table = ttk.Treeview(self.statistics_table_frame, yscrollcommand=self.statistics_table_scroll.set, selectmode='browse', height=25)
+
+        self.statistics_table_scroll.config(command=self.statistics_table.yview)
+
+        self.statistics_table['columns'] = ('ID', 'Nome', 'EAN', 'Preço', 'Quantidade')
+
+        # formatando as colunas
+
+        self.statistics_table.column('#0', width=0, stretch=NO)
+        self.statistics_table.column('ID', anchor=CENTER, width=60, minwidth=15)
+        self.statistics_table.column('Nome', anchor=W, width=350)
+        self.statistics_table.column('EAN', width=270)
+        self.statistics_table.column("Preço", anchor=W, width=140)
+        self.statistics_table.column('Quantidade', anchor=CENTER, width=100, minwidth=15)
+
+        # cabeçalho da tabela
+
+        self.statistics_table.heading('ID', text='ID')
+        self.statistics_table.heading('Nome', text='Nome')
+        self.statistics_table.heading('EAN', text='EAN')
+        self.statistics_table.heading('Preço', text='Preço')
+        self.statistics_table.heading('Quantidade', text='Quantidade')
+
+        self.view_in_graphics_bt = Button(self.statistics_frame, text='Ver em gráfico', bg=self.blue, relief='flat', fg='white', font=self.font2)
+
+        self.actual_view = str()
+
+
 
         # executando os métodos
 
@@ -950,8 +986,195 @@ class UI:
 
         self.statistics_frame.pack(fill=BOTH)
 
-        self.warning_icon.pack(pady=10)
-        self.wip_label.pack()
+        self.most_expensive_product.pack()
+        self.most_sold_products.pack()
+        self.most_cheap_product.pack()
+
+        self.view_in_graphics_bt.pack(pady=15)
+
+        self.statistics_table_frame.pack()
+
+        self.statistics_table_scroll.pack(side=RIGHT, fill=Y)
+
+        self.statistics_table.pack()
+
+    def most_sold(self):
+        self.actual_view = 'most sold'
+
+        for record in self.statistics_table.get_children():
+            self.statistics_table.delete(record)
+
+        self.cur.execute('select * from products')
+        products = self.cur.fetchall()
+        self.con.commit()
+
+        quantity = list()
+
+        for x in products:
+            quantity.append(x[4])
+
+        quantity.sort(reverse=True)
+
+        most_sold = list()
+        count = 0
+
+        for n in range (1, 6):
+            most_sold.append(quantity[count])
+            count += 1
+
+        print(most_sold)
+
+        # c = Counter(most_sold)
+        # print(c)
+
+        # print(most_sold.index(15))
+
+        self.cur.execute('select * from products where value = ? or ? or ? or ? or ?', most_sold)
+        final = self.cur.fetchall()
+        self.con.commit()
+        print(final)
+
+        final = sorted(sorted(final, key=lambda x: x[4]), key=lambda x: x[4], reverse=True)
+
+        print(final)
+
+        id = 1
+
+        sorted_p = list()
+
+        for i in range(0, 5):
+            sorted_p.append(final[i])
+
+        print(sorted_p)
+
+        for product in sorted_p:
+            self.statistics_table.insert(parent='', index='end', iid=id, values=(product[0], product[1], product[2], product[3], product[4]))
+            id += 1
+
+        def graphic_view():
+            pass
+
+        self.view_in_graphics_bt.config(command=graphic_view)
+
+    def most_expensive(self):
+        self.actual_view = 'most expensive'
+
+        for record in self.statistics_table.get_children():
+            self.statistics_table.delete(record)
+
+        self.cur.execute('select * from products')
+        products = self.cur.fetchall()
+        self.con.commit()
+
+        value = list()
+
+        for x in products:
+            value.append(x[3])
+
+        value = list(map(lambda x: float(x), value))
+
+        value.sort(reverse=True)
+
+        most_expensive = list()
+        count = 0
+
+        for n in range(1, 6):
+            most_expensive.append(value[count])
+            count += 1
+
+        print(most_expensive)
+
+        # c = Counter(most_sold)
+        # print(c)
+
+        #print(most_expensive.index(15))
+
+        self.cur.execute('select * from products where value = ? or ? or ? or ? or ?', most_expensive)
+        a = list(self.cur.fetchall())
+        final = list()
+        for x in a:
+            final.append([x[0], x[1], x[2], float(x[3]), x[4]])
+
+        self.con.commit()
+        print(final)
+
+        final = sorted(sorted(final, key=lambda x: x[3]), key=lambda x: x[3], reverse=True)
+
+        print(final)
+
+        id = 1
+
+        sorted_p = list()
+
+        for i in range(0, 5):
+            sorted_p.append(final[i])
+
+        print(sorted_p)
+
+        for product in sorted_p:
+            self.statistics_table.insert(parent='', index='end', iid=id,
+                                         values=(product[0], product[1], product[2], product[3], product[4]))
+            id += 1
+
+    def most_cheap(self):
+        self.actual_view = 'most cheap'
+
+        for record in self.statistics_table.get_children():
+            self.statistics_table.delete(record)
+
+        self.cur.execute('select * from products')
+        products = self.cur.fetchall()
+        self.con.commit()
+
+        value = list()
+
+        for x in products:
+            value.append(x[3])
+
+        value = list(map(lambda x: float(x), value))
+
+        value.sort()
+
+        most_cheap = list()
+        count = 0
+
+        for n in range(1, 6):
+            most_cheap.append(value[count])
+            count += 1
+
+        print(most_cheap)
+
+        # c = Counter(most_sold)
+        # print(c)
+
+        # print(most_expensive.index(15))
+
+        self.cur.execute('select * from products where value = ? or ? or ? or ? or ?', most_cheap)
+        a = list(self.cur.fetchall())
+        final = list()
+        for x in a:
+            final.append([x[0], x[1], x[2], float(x[3]), x[4]])
+
+        self.con.commit()
+        print(final)
+
+        final = sorted(sorted(final, key=lambda x: x[3]), key=lambda x: x[3])
+
+        print(final)
+
+        id = 1
+
+        sorted_p = list()
+
+        for i in range(0, 5):
+            sorted_p.append(final[i])
+
+        print(sorted_p)
+
+        for product in sorted_p:
+            self.statistics_table.insert(parent='', index='end', iid=id,
+                                         values=(product[0], product[1], product[2], product[3], product[4]))
+            id += 1
 
     # função que limpa a tela
 
