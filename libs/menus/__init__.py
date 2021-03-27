@@ -2,6 +2,8 @@
 
 from tkinter import messagebox
 from tkinter import ttk
+import matplotlib.pyplot as plt
+import numpy as np
 import csv
 from tkinter.filedialog import *
 import os
@@ -74,11 +76,13 @@ class UI:
 
         # botão de registrar
 
-        self.register_button = Button(self.sale_frame, text='Registrar', command=self.register, bg=self.blue, relief='flat', fg='white', font=self.font2)
+        self.register_button = Button(self.sale_frame, text='Registrar', command=self.register, bg=self.blue,
+                                      relief='flat', fg='white', font=self.font2)
 
         # botão de resetar
 
-        self.reset_button = Button(self.sale_frame, text='Resetar', command=self.sale_reset, bg=self.blue, relief='flat', fg='white', font=self.font2)
+        self.reset_button = Button(self.sale_frame, text='Resetar', command=self.sale_reset, bg=self.blue,
+                                   relief='flat', fg='white', font=self.font2)
 
         # aba products =============================================================================================
 
@@ -86,13 +90,17 @@ class UI:
 
         # botões de gerenciamento do banco de dados
 
-        self.reset_sales_bt = Button(self.products_frame, text='Resetar Vendas', bg=self.blue, relief='flat', fg='white', font=self.font2, command=self.reset_sales)
+        self.reset_sales_bt = Button(self.products_frame, text='Resetar Vendas', bg=self.blue, relief='flat',
+                                     fg='white', font=self.font2, command=self.reset_sales)
 
-        self.delete_product_bt = Button(self.products_frame, text='Remover Produto', bg=self.blue, relief='flat', fg='white', font=self.font2, command=self.delete_product)
+        self.delete_product_bt = Button(self.products_frame, text='Remover Produto', bg=self.blue, relief='flat',
+                                        fg='white', font=self.font2, command=self.delete_product)
 
-        self.edit_product_bt = Button(self.products_frame, text='Editar Produto', bg=self.blue, relief='flat', fg='white', font=self.font2, command=self.edit_product)
+        self.edit_product_bt = Button(self.products_frame, text='Editar Produto', bg=self.blue, relief='flat',
+                                      fg='white', font=self.font2, command=self.edit_product)
 
-        self.add_product_bt = Button(self.products_frame, text='Adicionar Produto', bg=self.blue, relief='flat', fg='white', font=self.font2, command=self.add_product)
+        self.add_product_bt = Button(self.products_frame, text='Adicionar Produto', bg=self.blue, relief='flat',
+                                     fg='white', font=self.font2, command=self.add_product)
 
         # criando um frame para a o treeview
 
@@ -146,19 +154,24 @@ class UI:
 
         self.search_p1 = Radiobutton(self.search_frame, text='Nome do Produto', variable=self.search_parameter,
                                      value='name', font=self.font3)
-        self.search_p2 = Radiobutton(self.search_frame, text='ID', variable=self.search_parameter, value='id', font=self.font3)
-        self.search_p3 = Radiobutton(self.search_frame, text='EAN', variable=self.search_parameter, value='EAN', font=self.font3)
-        self.search_p4 = Radiobutton(self.search_frame, text='Preço', variable=self.search_parameter, value='value', font=self.font3)
+        self.search_p2 = Radiobutton(self.search_frame, text='ID', variable=self.search_parameter, value='id',
+                                     font=self.font3)
+        self.search_p3 = Radiobutton(self.search_frame, text='EAN', variable=self.search_parameter, value='EAN',
+                                     font=self.font3)
+        self.search_p4 = Radiobutton(self.search_frame, text='Preço', variable=self.search_parameter, value='value',
+                                     font=self.font3)
         self.search_p5 = Radiobutton(self.search_frame, text='Quantidade', variable=self.search_parameter,
                                      value='quantity', font=self.font3)
 
         # botão pesquisar
 
-        self.bt_search = Button(self.search_frame, text='Pesquisar', command=self.search, bg=self.blue, relief='flat', fg='white', font=self.font2)
+        self.bt_search = Button(self.search_frame, text='Pesquisar', command=self.search, bg=self.blue, relief='flat',
+                                fg='white', font=self.font2)
 
         # botão resetar
 
-        self.reset_search_button = Button(self.search_frame, text='Resetar', command=self.reset_search_results, bg=self.blue, relief='flat', fg='white', font=self.font2)
+        self.reset_search_button = Button(self.search_frame, text='Resetar', command=self.reset_search_results,
+                                          bg=self.blue, relief='flat', fg='white', font=self.font2)
 
         # label que mostrará a quantidade de resultados da pesquisa
 
@@ -207,8 +220,10 @@ class UI:
 
         self.register_way = StringVar()
 
-        self.EAN_way = Radiobutton(self.config_frame, text='Código EAN', variable=self.register_way, value='EAN', font=self.font3)
-        self.name_way = Radiobutton(self.config_frame, text='Nome do produto', variable=self.register_way, value='name', font=self.font3)
+        self.EAN_way = Radiobutton(self.config_frame, text='Código EAN', variable=self.register_way, value='EAN',
+                                   font=self.font3)
+        self.name_way = Radiobutton(self.config_frame, text='Nome do produto', variable=self.register_way, value='name',
+                                    font=self.font3)
 
         self.EAN_way.select()
         self.register_way.set('EAN')
@@ -228,11 +243,14 @@ class UI:
         self.client_phone_lb = Label(self.clients_frame, text='Número:', font=self.font3)
         self.client_phone_entry = Entry(self.clients_frame, font=self.font3)
 
-        self.register_client_button = Button(self.clients_frame, text='Adicionar Cliente', command=self.register_client, bg=self.blue, relief='flat', fg='white', font=self.font2)
+        self.register_client_button = Button(self.clients_frame, text='Adicionar Cliente', command=self.register_client,
+                                             bg=self.blue, relief='flat', fg='white', font=self.font2)
 
-        self.reset_client_button = Button(self.clients_frame, text='Resetar', command=self.reset_clients_data, bg=self.blue, relief='flat', fg='white', font=self.font2)
+        self.reset_client_button = Button(self.clients_frame, text='Resetar', command=self.reset_clients_data,
+                                          bg=self.blue, relief='flat', fg='white', font=self.font2)
 
-        self.refresh_clients_button = Button(self.clients_frame, image=self.refresh_icon, command=self.refresh_clients, relief='flat', fg='white', font=self.font2)
+        self.refresh_clients_button = Button(self.clients_frame, image=self.refresh_icon, command=self.refresh_clients,
+                                             relief='flat', fg='white', font=self.font2)
 
         self.clients_tree_frame = Frame(self.clients_frame, pady=20)
 
@@ -279,7 +297,8 @@ class UI:
 
         # botão de calcular comissão
 
-        self.comission_button = Button(self.report_frame, text='Calcular', command=self.comission, bg=self.blue, relief='flat', fg='white', font=self.font2)
+        self.comission_button = Button(self.report_frame, text='Calcular', command=self.comission, bg=self.blue,
+                                       relief='flat', fg='white', font=self.font2)
 
         # label de resposta
 
@@ -291,13 +310,16 @@ class UI:
 
         self.goal_entry = Entry(self.report_frame, font=self.font2)
 
-        self.goal_button = Button(self.report_frame, text='Calcular', command=self.goal, bg=self.blue, relief='flat', fg='white', font=self.font2)
+        self.goal_button = Button(self.report_frame, text='Calcular', command=self.goal, bg=self.blue, relief='flat',
+                                  fg='white', font=self.font2)
 
         self.goal_status_lb = Label(self.report_frame, font=self.font2)
 
         # gerar planilha
 
-        self.spreadsheet_bt = Button(self.report_frame, text='Gerar Planilha De Vendas', command=self.generate_spreadsheet, bg=self.blue, relief='flat', fg='white', font=self.font2)
+        self.spreadsheet_bt = Button(self.report_frame, text='Gerar Planilha De Vendas',
+                                     command=self.generate_spreadsheet, bg=self.blue, relief='flat', fg='white',
+                                     font=self.font2)
 
         # aba estatísticas ================================================================================
 
@@ -308,9 +330,12 @@ class UI:
         # self.ico_warning = PhotoImage(file=os.path.join(self.app_path.replace("menus", ""), 'imagens', 'warning-icon.png'))
         # self.warning_icon = Label(self.statistics_frame, image=self.ico_warning)
 
-        self.most_sold_products = Button(self.statistics_frame, text='Mais vendidos', font=self.font2, command=self.most_sold)
-        self.most_expensive_product = Button(self.statistics_frame, text='Mais caros', font=self.font2, command=self.most_expensive)
-        self.most_cheap_product = Button(self.statistics_frame, text='Mais baratos', font=self.font2, command=self.most_cheap)
+        self.most_sold_products = Button(self.statistics_frame, text='Mais vendidos', font=self.font2,
+                                         command=self.most_sold)
+        self.most_expensive_product = Button(self.statistics_frame, text='Mais caros', font=self.font2,
+                                             command=self.most_expensive)
+        self.most_cheap_product = Button(self.statistics_frame, text='Mais baratos', font=self.font2,
+                                         command=self.most_cheap)
 
         # table frame
 
@@ -320,7 +345,9 @@ class UI:
 
         self.statistics_table_scroll = Scrollbar(self.statistics_table_frame)
 
-        self.statistics_table = ttk.Treeview(self.statistics_table_frame, yscrollcommand=self.statistics_table_scroll.set, selectmode='browse', height=25)
+        self.statistics_table = ttk.Treeview(self.statistics_table_frame,
+                                             yscrollcommand=self.statistics_table_scroll.set, selectmode='browse',
+                                             height=25)
 
         self.statistics_table_scroll.config(command=self.statistics_table.yview)
 
@@ -343,11 +370,10 @@ class UI:
         self.statistics_table.heading('Preço', text='Preço')
         self.statistics_table.heading('Quantidade', text='Quantidade')
 
-        self.view_in_graphics_bt = Button(self.statistics_frame, text='Ver em gráfico', bg=self.blue, relief='flat', fg='white', font=self.font2)
+        self.view_in_graphics_bt = Button(self.statistics_frame, text='Ver em gráfico', bg=self.blue, relief='flat',
+                                          fg='white', font=self.font2)
 
         self.actual_view = str()
-
-
 
         # executando os métodos
 
@@ -381,10 +407,12 @@ class UI:
                                    command=self.products_tab)
         self.tab_products.place(x=325, y=0)
 
-        self.tab_reports = Button(self.top_frame, text='RELATÓRIOS', height=5, width=10, borderwidth=0, command=self.reports_tab)
+        self.tab_reports = Button(self.top_frame, text='RELATÓRIOS', height=5, width=10, borderwidth=0,
+                                  command=self.reports_tab)
         self.tab_reports.place(x=450, y=0)
 
-        self.tab_statistics = Button(self.top_frame, text='ESTATÍSTICAS', height=5, width=10, borderwidth=0, command=self.statistics_tab)
+        self.tab_statistics = Button(self.top_frame, text='ESTATÍSTICAS', height=5, width=10, borderwidth=0,
+                                     command=self.statistics_tab)
         self.tab_statistics.place(x=575, y=0)
 
         self.tab_search = Button(self.top_frame, text='BUSCAR', height=5, width=10, borderwidth=0,
@@ -540,7 +568,6 @@ class UI:
     def selectItem(self):
         selected = self.table.focus()
 
-
         return self.table.item(selected)
 
     def edit_product(self):
@@ -560,7 +587,6 @@ class UI:
             entry_name = Entry(popup, font=self.font3)
             lb_name.grid(row=1, column=1)
             entry_name.grid(row=1, column=2)
-
 
             lb_ean = Label(popup, text='Código EAN:', font=self.font3)
             entry_ean = Entry(popup, font=self.font3)
@@ -613,7 +639,6 @@ class UI:
 
             popup.mainloop()
 
-
     def delete_product(self):
 
         product = self.selectItem()
@@ -627,7 +652,7 @@ class UI:
 
         self.cur.execute(command, (id,))
 
-        #self.con.commit()
+        # self.con.commit()
 
     def add_product(self):
 
@@ -684,7 +709,6 @@ class UI:
         cancel_bt.grid(row=5, column=3, pady=5, padx=5)
 
         popup.mainloop()
-
 
     # aba search =====================================================================================================
 
@@ -900,7 +924,6 @@ class UI:
 
         comission = self.comission_entry.get().replace(',', '.')
 
-
         print(valor_final)
 
         valor_final = (float(comission.replace('%', ' ')) / 100) * valor_final
@@ -930,7 +953,7 @@ class UI:
         for value in values:
             valor_final += float(value[0]) * value[1]
 
-        #meta = valor_final * 100 / int(meta)
+        # meta = valor_final * 100 / int(meta)
 
         if valor_final < meta:
 
@@ -950,7 +973,6 @@ class UI:
 
             self.goal_status_lb['text'] = 'Você bateu a meta!'
             self.goal_status_lb['fg'] = 'yellow'
-
 
     # função que gera a planilha
 
@@ -976,7 +998,8 @@ class UI:
 
                 csv_file.close()
 
-                messagebox.showinfo('IMPORTANTE!', message='O ARQUIVO FOI SALVO COMO CSV! CONFIGURE O EXCEL PARA VER OS DADOS CORRETAMENTE')
+                messagebox.showinfo('IMPORTANTE!',
+                                    message='O ARQUIVO FOI SALVO COMO CSV! CONFIGURE O EXCEL PARA VER OS DADOS CORRETAMENTE')
 
     # função que empacota a aba statistics
 
@@ -1018,7 +1041,7 @@ class UI:
         most_sold = list()
         count = 0
 
-        for n in range (1, 6):
+        for n in range(1, 6):
             most_sold.append(quantity[count])
             count += 1
 
@@ -1048,11 +1071,23 @@ class UI:
         print(sorted_p)
 
         for product in sorted_p:
-            self.statistics_table.insert(parent='', index='end', iid=id, values=(product[0], product[1], product[2], product[3], product[4]))
+            self.statistics_table.insert(parent='', index='end', iid=id,
+                                         values=(product[0], product[1], product[2], product[3], product[4]))
             id += 1
 
         def graphic_view():
-            pass
+            names = list()
+            sales = list()
+
+            for p in sorted_p:
+                names.append(str(p[0]))
+                sales.append(p[4])
+
+            plt.bar(names, sales)
+            plt.xlabel('Produtos por ID')
+            plt.ylabel('Vendas')
+            plt.title('Produtos mais vendidos')
+            plt.show()
 
         self.view_in_graphics_bt.config(command=graphic_view)
 
@@ -1087,7 +1122,7 @@ class UI:
         # c = Counter(most_sold)
         # print(c)
 
-        #print(most_expensive.index(15))
+        # print(most_expensive.index(15))
 
         self.cur.execute('select * from products where value = ? or ? or ? or ? or ?', most_expensive)
         a = list(self.cur.fetchall())
@@ -1115,6 +1150,22 @@ class UI:
             self.statistics_table.insert(parent='', index='end', iid=id,
                                          values=(product[0], product[1], product[2], product[3], product[4]))
             id += 1
+
+        def graphic_view():
+            names = list()
+            sales = list()
+
+            for p in sorted_p:
+                names.append(str(p[0]))
+                sales.append(p[3])
+
+            plt.bar(names, sales)
+            plt.xlabel('Produtos por ID')
+            plt.ylabel('Preço')
+            plt.title('Produtos mais caros')
+            plt.show()
+
+        self.view_in_graphics_bt.config(command=graphic_view)
 
     def most_cheap(self):
         self.actual_view = 'most cheap'
@@ -1175,6 +1226,22 @@ class UI:
             self.statistics_table.insert(parent='', index='end', iid=id,
                                          values=(product[0], product[1], product[2], product[3], product[4]))
             id += 1
+
+        def graphic_view():
+            names = list()
+            sales = list()
+
+            for p in sorted_p:
+                names.append(str(p[0]))
+                sales.append(p[3])
+
+            plt.bar(names, sales)
+            plt.xlabel('Produtos por ID')
+            plt.ylabel('Preço')
+            plt.title('Produtos mais baratos')
+            plt.show()
+
+        self.view_in_graphics_bt.config(command=graphic_view)
 
     # função que limpa a tela
 
