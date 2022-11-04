@@ -1,7 +1,7 @@
 '''
 Projeto Sistema de Vendas
 Fase:
-Completo ( )
+Completo (X)
 '''
 
 
@@ -49,6 +49,3 @@ class App:
 if __name__ == '__main__':
     App()
 
-print('teste')
-
-print('leonardo lopes ciardi')
